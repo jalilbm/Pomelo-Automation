@@ -12,6 +12,8 @@ import traceback
 from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
 import json
 from decouple import config
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 
 
 CHROMEDRIVER_PATH = config("CHROMEDRIVER_PATH")
@@ -38,22 +40,32 @@ day_mapping = {
 }
 
 
+# def get_driver():
+#     options = uc.ChromeOptions()
+#     options.add_argument("--headless")
+#     options.add_argument("--disable-gpu")
+#     options.add_argument("--no-sandbox")
+#     # options.add_argument("--user-data-dir=./chrome_profile/")
+
+#     # Check if GOOGLE_CHROME_BIN is set (indicating we're on Heroku)
+#     if CHROME_PATH:
+#         options.binary_location = CHROME_PATH
+
+#     driver = uc.Chrome(
+#         options=options,
+#         executable_path=CHROMEDRIVER_PATH,
+#     )
+#     driver.set_page_load_timeout(20)
+#     return driver
+
+
 def get_driver():
-    options = uc.ChromeOptions()
+    service = Service(executable_path=CHROMEDRIVER_PATH)
+    options = webdriver.ChromeOptions()
     options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
     options.add_argument("--no-sandbox")
-    # options.add_argument("--user-data-dir=./chrome_profile/")
-
-    # Check if GOOGLE_CHROME_BIN is set (indicating we're on Heroku)
-    if CHROME_PATH:
-        options.binary_location = CHROME_PATH
-
-    driver = uc.Chrome(
-        options=options,
-        executable_path=CHROMEDRIVER_PATH,
-    )
-    driver.set_page_load_timeout(20)
+    options.add_argument("--disable-dev-shm-usage")
+    driver = webdriver.Chrome(service=service, options=options)
     return driver
 
 
