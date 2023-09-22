@@ -1,12 +1,5 @@
-amqp==5.1.1
-appdirs==1.4.4
-APScheduler==3.10.4
-asgiref==3.7.2
-astroid==2.15.6
-attrs==23.1.0
 beautifulsoup4==4.12.2
 billiard==4.1.0
-black==23.9.1
 bs4==0.0.1
 build==0.10.0
 CacheControl==0.13.1
@@ -82,7 +75,6 @@ pydocstyle==6.3.0
 pyee==8.2.2
 pyflakes==2.5.0
 Pygments==2.16.1
-PyGObject==3.44.1
 PyJWT==2.8.0
 pylint==2.17.5
 pylint-celery==0.3
@@ -92,9 +84,6 @@ pylint-plugin-utils==0.7
 PyMySQL==1.1.0
 pyppeteer==1.0.2
 pyproject_hooks==1.0.0
-PyQt5==5.15.9
-PyQt5-Qt5==5.15.2
-PyQt5-sip==12.12.2
 pyquery==2.0.0
 pyrsistent==0.19.3
 PySocks==1.7.1
@@ -105,11 +94,8 @@ pytz==2023.3.post1
 PyYAML==6.0.1
 rapidfuzz==2.15.1
 redis==5.0.0
-requests==2.31.0
-requests-html==0.10.0
 requests-toolbelt==1.0.0
 requirements-detector==1.2.2
-rich==13.5.2
 selenium==4.12.0
 semver==3.0.1
 setoptconf-tmp==0.3.1
@@ -143,5 +129,4 @@ whitenoise==6.5.0
 wrapt==1.15.0
 wsproto==1.2.0
 xattr==0.10.1
-zipp==3.16.2
 gunicorn==21.2.0
