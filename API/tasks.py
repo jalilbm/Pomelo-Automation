@@ -151,14 +151,14 @@ def turn_messages_on(user, timeframe):
     add_log(user, f"Turning {timeframe.type} messages ON...")
     PomeloTasks(user).turn_messages_on()
     PomeloCredential.objects.filter(user=user).update(chat_on=True)
-    add_log(user, f"Turned {timeframe.type} messages ON")
+    add_log(user, f"Turned {timeframe.type} messages ON", type="success")
 
 
 def turn_messages_off(user, timeframe):
     add_log(user, f"Turning {timeframe.type} messages OFF...")
     PomeloTasks(user).turn_messages_off()
     PomeloCredential.objects.filter(user=user).update(chat_on=False)
-    add_log(user, f"Turned {timeframe.type} messages OFF")
+    add_log(user, f"Turned {timeframe.type} messages OFF", type="success")
 
 
 @shared_task(queue="handle_messages_activation_queue")

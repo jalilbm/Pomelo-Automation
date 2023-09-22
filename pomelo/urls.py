@@ -22,10 +22,11 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from API import views
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("API.urls")),
     # Simple JWT
     path(
         "api/token/",
@@ -33,4 +34,8 @@ urlpatterns = [
         name="token_obtain_pair",
     ),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # API
+    path("api/", include("API.urls")),
+    # React
+    path("", TemplateView.as_view(template_name="index.html")),
 ]
