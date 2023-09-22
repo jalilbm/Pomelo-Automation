@@ -40,19 +40,18 @@ day_mapping = {
 
 def get_driver():
     options = uc.ChromeOptions()
-    options.headless = True
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
     # options.add_argument("--user-data-dir=./chrome_profile/")
 
     # Check if GOOGLE_CHROME_BIN is set (indicating we're on Heroku)
     if CHROME_PATH:
         options.binary_location = CHROME_PATH
 
-    # Set the chromedriver path
-    chromedriver_path = CHROMEDRIVER_PATH
-
     driver = uc.Chrome(
         options=options,
-        executable_path=chromedriver_path,
+        executable_path=CHROMEDRIVER_PATH,
     )
     driver.set_page_load_timeout(20)
     return driver
