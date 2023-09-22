@@ -145,3 +145,4 @@ wrapt==1.15.0
 wsproto==1.2.0
 xattr==0.10.1
 zipp==3.16.2
+gunicorn==21.2.0
