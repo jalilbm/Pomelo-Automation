@@ -9,3 +9,4 @@ python-decouple==3.8
 rest_framework_simplejwt==0.0.2
 rich==13.5.3
 undetected_chromedriver==3.5.3
+whitenoise==6.5.0

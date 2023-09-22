@@ -61,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 REST_FRAMEWORK = {
@@ -197,3 +198,4 @@ CORS_ALLOW_CREDENTIALS = True
 CELERY_BROKER_URL = REDIS_URL
 CELERY_TIMEZONE = "UTC"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
