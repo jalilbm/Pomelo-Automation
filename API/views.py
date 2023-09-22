@@ -11,7 +11,6 @@ from django.contrib.auth.hashers import make_password
 from rest_framework import viewsets
 from .utils import *
 import traceback
-from rich import print
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):

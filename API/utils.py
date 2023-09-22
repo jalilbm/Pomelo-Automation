@@ -40,7 +40,7 @@ day_mapping = {
 
 def get_driver():
     options = uc.ChromeOptions()
-    # options.headless = True
+    options.headless = True
     # options.add_argument("--user-data-dir=./chrome_profile/")
 
     # Check if GOOGLE_CHROME_BIN is set (indicating we're on Heroku)
