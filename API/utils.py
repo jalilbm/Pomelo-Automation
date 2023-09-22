@@ -11,7 +11,11 @@ from datetime import datetime, date, timedelta
 import traceback
 from django_celery_beat.models import PeriodicTask, CrontabSchedule, IntervalSchedule
 import json
+from decouple import config
 
+
+CHROMEDRIVER_PATH = config("CHROMEDRIVER_PATH")
+CHROME_PATH = config("CHROME_PATH")
 
 week_days = [
     "Monday",
@@ -37,10 +41,18 @@ day_mapping = {
 def get_driver():
     options = uc.ChromeOptions()
     # options.headless = True
-    options.add_argument("--user-data-dir=./chrome_profile/")
+    # options.add_argument("--user-data-dir=./chrome_profile/")
+
+    # Check if GOOGLE_CHROME_BIN is set (indicating we're on Heroku)
+    if CHROME_PATH:
+        options.binary_location = CHROME_PATH
+
+    # Set the chromedriver path
+    chromedriver_path = CHROMEDRIVER_PATH
+
     driver = uc.Chrome(
         options=options,
-        driver_executable_path="/Users/macbook/chromedriver",
+        executable_path=chromedriver_path,
     )
     driver.set_page_load_timeout(20)
     return driver
