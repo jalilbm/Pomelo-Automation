@@ -163,7 +163,6 @@ def turn_messages_off(user, timeframe):
 
 @shared_task(queue="handle_messages_activation_queue")
 def handle_messages_activation(timeframe_id, messages_on, user_id):
-    print("------handle_messages_activation")
     timeframe = Timeframe.objects.get(pk=timeframe_id)
     user = User.objects.get(pk=user_id)
     user_messages_on = PomeloCredential.objects.get(user=user).chat_on
@@ -183,9 +182,9 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
     if timeframe.type.lower() == "clinic days":
         if messages_on:
             # if the timeframe is for turning messages ON
-            if user_messages_on:
-                # Chat already ON
-                return
+            # if user_messages_on:
+            #     # Chat already ON
+            #     return
             # if the timeframe is for turning messages ON
             if timeframe_from_weekday_and_time_not_in_holidays_or_stat_days(
                 timeframe, user
@@ -196,8 +195,9 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
         else:
             # if the timeframe is for turning messages OFF
             if (
-                user_messages_on
-                and end_time_not_fho(timeframe, user)
+                # user_messages_on
+                # and
+                end_time_not_fho(timeframe, user)
                 and timeframe_to_weekday_and_time_not_in_holidays_or_stat_days(
                     timeframe, user
                 )
@@ -208,9 +208,9 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
     elif timeframe.type.lower() == "fho clinics":
         if messages_on:
             # if the timeframe is for turning messages ON
-            if user_messages_on:
-                # Chat already ON
-                return
+            # if user_messages_on:
+            #     # Chat already ON
+            #     return
             if timeframe_from_weekday_and_time_not_in_holidays_or_stat_days(
                 timeframe, user
             ):
@@ -220,8 +220,9 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
         else:
             # if the timeframe is for turning messages OFF
             if (
-                user_messages_on
-                and timeframe_to_weekday_and_time_not_in_holidays_or_stat_days(
+                # user_messages_on
+                # and
+                timeframe_to_weekday_and_time_not_in_holidays_or_stat_days(
                     timeframe, user
                 )
             ):
@@ -232,7 +233,7 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
         # STAT days are not responsible of turning messages on
         if (
             not messages_on
-            and user_messages_on
+            # and user_messages_on
             and timeframe_from_datetime_not_in_holidays(timeframe, user)
         ):
             turn_messages_off(user, timeframe)
@@ -241,7 +242,8 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
             timeframe.delete()
     elif timeframe.type.lower() == "holidays":
         # Holidays are not responsible of turning messages on
-        if not messages_on and user_messages_on:
+        # if not messages_on and user_messages_on:
+        if not messages_on:
             turn_messages_off(user, timeframe)
             return
         elif messages_on:
