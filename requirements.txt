@@ -78,7 +78,6 @@ psycopg2==2.9.7
 ptyprocess==0.7.0
 pycairo==1.24.0
 pycodestyle==2.9.1
-pycparser @ file:///private/tmp/pycparser-20230831-5915-11uocgy/pycparser-2.21
 pydocstyle==6.3.0
 pyee==8.2.2
 pyflakes==2.5.0
