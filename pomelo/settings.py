@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from decouple import config
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,12 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 DATABASE_USER = config("DATABASE_USER")
 DATABASE_PASSWORD = config("DATABASE_PASSWORD")
 DATABASE_NAME = config("DATABASE_NAME")
 DATABASE_HOST = config("DATABASE_HOST")
 REDIS_URL = config("REDIS_URL")
+DEBUG = config("DEBUG")
+
+print("------", DEBUG)
 
 ALLOWED_HOSTS = []
 
@@ -198,4 +201,6 @@ CORS_ALLOW_CREDENTIALS = True
 CELERY_BROKER_URL = REDIS_URL
 CELERY_TIMEZONE = "UTC"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+if not DEBUG:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
