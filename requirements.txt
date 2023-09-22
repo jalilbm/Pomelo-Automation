@@ -1,0 +1,11 @@
+requests_html==0.10.0
+pytz==2020.1
+selenium==3.141.0
+Django==4.2.5
+django_celery_beat==2.5.0
+djangorestframework==3.14.0
+kombu==5.3.2
+python-decouple==3.8
+rest_framework_simplejwt==0.0.2
+rich==13.5.3
+undetected_chromedriver==3.5.3

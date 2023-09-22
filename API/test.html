@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="U4jvH8F9oq1OHtNWQMUWl0WeZBlEL7OGcLmrtpAT">
+
+            <title>Pomelo Platform</title>
+    
+     <!-- Styles -->
+
+    <link href="/css/app.css?id=d26d625deb3ad5689df4" rel="stylesheet">
+    <link href="/css/vendor.css?id=beee15299209895cb3a7" rel="stylesheet">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+
+    
+
+
+    <!-- Latest compiled and minified CSS -->
+    
+</head>
+<body style="background:#fff" id="myfamilymd" class="">
+
+<div style="text-align:center;background:tomato;padding:5px 15px;color:#fff;display:none;" >
+      The system will be unavailable during scheduled maintenance on <strong>December 20, 2022 between 9:00pm and 11:00pm ET.</strong>
+  </div>
+
+<div class="device-xs visible-xs"></div>
+<div class="device-sm visible-sm"></div>
+<div class="device-md visible-md"></div>
+<div class="device-lg visible-lg"></div>
+<div id="app">
+
+
+        <div id="customModal" class="modal fade" role="dialog" data-modal-index="1">
+    <div class="modal-dialog">
+
+    </div>
+</div>
+<div id="customModal2" class="modal fade" role="dialog" data-modal-index="2">
+    <div class="modal-dialog">
+
+    </div>
+</div>
+<!-- Error Modal -->
+<div id="errorModal" class="modal fade" role="dialog" data-modal-index="100">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content panel-danger">
+            <div class="modal-header panel-heading">
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times-circle fa-fw" style="vertical-align: middle;"></i></button>
+                <h4 class="modal-title"><i class="fa fa-fw fa-warning"></i> Error</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="msgFloat" class="small hm-animate-slow" style="display:none;">
+    <i class="fa fa-fw fa-5x" ></i>
+</div>
+
+<div id="statusMsg" style="">
+
+    <div class="character noMobile"></div>
+
+    <div class="contentWrapper bubble">
+
+        <div class="content"></div>
+    </div>
+
+
+</div>
+        <div id="globalNavTelus">
+  <div class="global-nav-wrapper">
+      <div class='title'>
+                <a href="https://portal.healthmyself.net/myfamilymd" title="Home" id="headerNavBrandHome">
+          MyFamilyMD
+        </a>
+      </div>
+      <div class="options">
+                              <a href="https://portal.healthmyself.net/myfamilymd">
+              Login
+            </a>
+                                            </div>
+  </div>
+</div>
+
+    <div id="siteNav"></div>
+
+
+
+
+    <div id="content">
+        <div class="container-fluid" style="padding-right:0px;padding-left:0px;">
+            <router-view></router-view>
+        </div>
+
+    </div>
+
+    <div v-if="!initialized">
+    <div class="fullscreen-loader-overlay loading">
+      <div class="loading-screen">
+        <div class="loading-animation">
+          <div class="logo">
+            <div class="pomelo pomelo-en"></div>
+          </div>
+          <div class="loading-bar"></div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+
+<hr id="bottomLoader">
+
+        
+    <footer class="footer-wrapper">
+  <div class="top-footer-wrapper">
+    <div class="top-footer-content">
+      <a href="https://www.telus.com/health" title='Telus Health Inc.' target="_blank">
+        Telus Health Inc.
+      </a> |
+      <a href="https://pomelohealth.io/" title='Pomelo Health' target="_blank">
+        Pomelo Health
+      </a>&copy; 2023</span> |
+      <span>v2.24.1</span>
+    </div>
+  </div>
+  <div class="bottom-footer-wrapper">
+    <div class="bottom-footer-content">
+      <div class="img-wrapper">
+        <img width="375" height="69" src="https://portal.healthmyself.net/assets/img/TELUS_Health_EN_Hor_2021_Digital_RGB_White 2.png" alt="TELUS logo">
+      </div>
+      <a href="/terms-of-use?lang=en" title='Terms of Use' target="_blank">
+        Terms of Use
+      </a>
+      <a href="/privacy-policy?lang=en" title='Privacy Policy' target="_blank">
+        Privacy Policy
+      </a>
+      <!-- <a href='/support' title='Technical Support' target="_blank">
+        Technical Support
+      </a> -->
+    </div>
+  </div>
+</footer>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-78058015-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'UA-78058015-2', {'anonymize_ip': true});
+  </script>
+</div>
+
+<!-- Scripts -->
+<script>
+  function callFromFlutter() {
+    alert('Call from flutter!');
+    return false;
+  }
+</script>
+
+<input id="testButton" type="button" value="Send event" style="visibility:hidden" onclick="callFromFlutter()"/>
+
+<script>
+    window.Laravel = {"env":"production","envType":"prod","region":"canada","pusherHost":"portal.healthmyself.net","pusherKey":"e4aec12b8aa7ef9d976136d3de823df4","pusherPort":6001,"broadcastPort":6001,"csrfToken":"U4jvH8F9oq1OHtNWQMUWl0WeZBlEL7OGcLmrtpAT","url":"\/myfamilymd\/","lang":"en","slug":"myfamilymd","timezone":"America\/Toronto","site_id":100,"site_user_id":null,"user_id":null,"redirectUrl":null,"login_page_content":"","login_page_header_content":"<p style=\"text-align:center;\"><img src=\"https:\/\/s3.ca-central-1.amazonaws.com\/healthmyself-prod-media\/media-af2529ec-b93a-69a8-8de4-8dabd1d8cf5d.png\" alt=\"\" width=\"542\" height=\"121\"><\/p>\n<p style=\"text-align:center;\"><em><strong>Welcome to our secure patient portal.<\/strong><\/em><\/p>\n<p style=\"text-align:center;\"><strong>For the MyFamilyMD website, click <a href=\"https:\/\/www.myfamilymd.ca\/\" target=\"_blank\" rel=\"noreferrer noopener\">here<\/a>.<\/strong><\/p>\n<p style=\"text-align:center;\"><span style=\"font-weight:600;\">For COVID vaccine info and bookings, click <a href=\"https:\/\/www.myfamilymd.ca\/covid-vaccination\" target=\"_blank\" rel=\"noreferrer noopener\">here<\/a>.<\/span><\/p>","mediaUrl":"https:\/\/dvo5g84lfaz6l.cloudfront.net\/","selfHelpSupportLink":"https:\/\/healthmyself.freshdesk.com\/support\/solutions\/36000008141"}</script>
+
+<script type="text/javascript">
+        window.__INITIAL_STATE__ = "{\"app\":\"SHARED\",\"user\":null,\"site\":{\"loginPageAlert\":null,\"id\":100,\"site_url\":\"myfamilymd\",\"unregistered_ebooking\":null,\"anonymous_ebooking\":null,\"master_switch_guest_patient_access\":null,\"master_switch_new_patient_access\":null,\"custom_terms_url\":null,\"site_name\":\"MyFamilyMD\",\"bookable_booking_flows\":[],\"dynamic_booking_flow_mode\":\"ALL\"},\"links\":{\"appointmentAccess\":\"https:\\/\\/appointmentaccess.telushealth.com\\/\"},\"featureFlags\":[\"appointment-cancel-notification\",\"broadcast\",\"eforms\",\"salesforce-chatbot\"],\"registrationForms\":[],\"accesRendezVous\":{\"domain\":\"https:\\/\\/appointmentaccess.telushealth.com\"}}";
+    </script>
+
+<script src="/js/lang.js?l=en"></script>
+<script type='text/javascript' src="/js/vendor-bootstrap.js?id=c9459232e79c16257fa2"></script>
+<script type='text/javascript' src='/js/hm.js'></script><script type='text/javascript' src="/js/vuex/shared/app.js?id=0fd55d72f49e0ef9b0a5"></script>
+<script type="text/javascript">
+    $(function () {
+
+        let id = $("#oneTimeBanner").data('banner-id');
+        if(!id){
+            return;
+        }
+
+        if (localStorage.getItem('alertBannerState') != id) {
+            $('#oneTimeBanner').fadeIn();
+        }
+
+        $('#oneTimeBanner .hide-perm').on('click', function () {
+            $("#oneTimeBanner").slideUp();
+            localStorage.setItem('alertBannerState', id);
+        });
+        $('#oneTimeBanner .hide-temp').on('click', function () {
+            $("#oneTimeBanner").slideUp();
+        });
+
+    });
+</script>
+
+<!-- Latest compiled and minified JavaScript -->
+
+</body>
+</html>
+
