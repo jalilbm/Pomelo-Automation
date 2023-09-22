@@ -34,7 +34,7 @@ DEBUG = config("DEBUG")
 
 print("------", DEBUG)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["pomelo-9017cad2536d.herokuapp.com"]
 
 
 # Application definition
@@ -195,9 +195,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3002",
-# ]
+CORS_ALLOWED_ORIGINS = ["http://localhost:3002", "pomelo-9017cad2536d.herokuapp.com"]
 CELERY_BROKER_URL = REDIS_URL
 CELERY_TIMEZONE = "UTC"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
