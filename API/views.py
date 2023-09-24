@@ -40,9 +40,11 @@ class SettingsView(APIView):
             user=request.user
         )
 
+        if "pomeloPassword" in data:
+            pomelo_object.password = encrypt_password(data.get("pomeloPassword"))
+
         # Update the email and password fields
         pomelo_object.email = data.get("pomeloEmail")
-        pomelo_object.password = data.get("pomeloPassword")
         pomelo_object.save()
 
         return Response(

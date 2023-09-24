@@ -130,3 +130,4 @@ wrapt==1.15.0
 wsproto==1.2.0
 xattr==0.10.1
 gunicorn==21.2.0
+cryptography==41.0.4

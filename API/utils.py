@@ -14,6 +14,8 @@ import json
 from decouple import config
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from cryptography.fernet import Fernet
+from base64 import urlsafe_b64encode
 
 
 CHROMEDRIVER_PATH = config("CHROMEDRIVER_PATH")
@@ -39,24 +41,25 @@ day_mapping = {
     "Sunday": "7",
 }
 
+# Convert Django's SECRET_KEY to a suitable format
+key = urlsafe_b64encode(config("SECRET_KEY").encode()[:32])
 
-# def get_driver():
-#     options = uc.ChromeOptions()
-#     options.add_argument("--headless")
-#     options.add_argument("--disable-gpu")
-#     options.add_argument("--no-sandbox")
-#     # options.add_argument("--user-data-dir=./chrome_profile/")
 
-#     # Check if GOOGLE_CHROME_BIN is set (indicating we're on Heroku)
-#     if CHROME_PATH:
-#         options.binary_location = CHROME_PATH
+def get_fernet_cipher():
+    cipher_suite = Fernet(key)
+    return cipher_suite
 
-#     driver = uc.Chrome(
-#         options=options,
-#         executable_path=CHROMEDRIVER_PATH,
-#     )
-#     driver.set_page_load_timeout(20)
-#     return driver
+
+def encrypt_password(password: str) -> str:
+    cipher_suite = get_fernet_cipher()
+    encrypted_text = cipher_suite.encrypt(password.encode())
+    return encrypted_text.decode()
+
+
+def decrypt_password(encrypted_password: str) -> str:
+    cipher_suite = get_fernet_cipher()
+    decrypted_text = cipher_suite.decrypt(encrypted_password.encode())
+    return decrypted_text.decode()
 
 
 def get_driver():
@@ -88,6 +91,7 @@ class PomeloTasks:
 
     def login(self):
         credentials = PomeloCredential.objects.get(user=self.user)
+        decrypted_password = decrypt_password(credentials.password)
         # Try 3 times to login
         for _ in range(3):
             with contextlib.suppress(TimeoutException):
@@ -104,7 +108,7 @@ class PomeloTasks:
                         (By.CSS_SELECTOR, '[name="password"]')
                     )
                 )
-                password_input.send_keys(credentials.password)
+                password_input.send_keys(decrypted_password)
                 # Click login button
                 login_button = WebDriverWait(self.driver, 30).until(
                     EC.presence_of_element_located(

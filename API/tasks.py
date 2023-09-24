@@ -18,12 +18,9 @@ weekday_mapping = {
 }
 
 
-def is_time_on_weekday_between_two_datetimes(
-    weekday_str, check_time, from_date, to_date
-):
+def get_next_weekday_datetime(weekday_str, check_time):
     """
-    Check if a specific time on a given weekday
-    ("Monday", "Tuesday", ..., "Sunday") falls within between two datetimes.
+    Get the next datetime for a specific time on a given weekday.
     """
 
     # Convert the weekday string to its integer value
@@ -50,7 +47,18 @@ def is_time_on_weekday_between_two_datetimes(
             days_ahead += 7
 
     target_date = today + timedelta(days_ahead)
-    target_datetime = datetime.combine(target_date, check_time).replace(tzinfo=pytz.utc)
+    return datetime.combine(target_date, check_time).replace(tzinfo=pytz.utc)
+
+
+def is_time_on_weekday_between_two_datetimes(
+    weekday_str, check_time, from_date, to_date
+):
+    """
+    Check if a specific time on a given weekday
+    ("Monday", "Tuesday", ..., "Sunday") falls within between two datetimes.
+    """
+
+    target_datetime = get_next_weekday_datetime(weekday_str, check_time)
 
     # Ensure from_date and to_date are timezone-aware
     if from_date.tzinfo is None:
@@ -111,11 +119,13 @@ def timeframe_to_weekday_and_time_not_in_holidays_or_stat_days(timeframe, user):
 
 
 def end_time_not_fho(timeframe, user):
+    timeframe_end_date_time = get_next_weekday_datetime(
+        timeframe.end_time_day, timeframe.to_time
+    )
     exists = Timeframe.objects.filter(
         user=user,
         type="FHO Clinics",
-        start_time_day=timeframe.end_time_day,
-        from_time__lte=timeframe.to_time,
+        end_datetime=timeframe_end_date_time,
     ).exists()
 
     return not exists
@@ -133,7 +143,7 @@ def datetime_not_between_two_datetimes(target_datetime, start_datetime, end_date
     Returns:
     - bool: True if target_datetime is between start_datetime and end_datetime, False otherwise.
     """
-    return start_datetime <= target_datetime <= end_datetime
+    return start_datetime <= target_datetime < end_datetime
 
 
 def timeframe_from_datetime_not_in_holidays(timeframe: Timeframe, user):
@@ -145,6 +155,30 @@ def timeframe_from_datetime_not_in_holidays(timeframe: Timeframe, user):
         )
         for holiday_timeframe in Timeframe.objects.filter(user=user, type="Holidays")
     )
+
+
+def timeframe_from_datetime_not_in_holidays_and_stat_days(timeframe: Timeframe, user):
+    in_holidays = any(
+        datetime_not_between_two_datetimes(
+            timeframe.from_date,
+            holiday_timeframe.from_date,
+            holiday_timeframe.to_date,
+        )
+        for holiday_timeframe in Timeframe.objects.filter(user=user, type="Holidays")
+    )
+    if in_holidays:
+        return False
+    in_stat_days = in_holidays = any(
+        datetime_not_between_two_datetimes(
+            timeframe.from_date,
+            stat_day_timeframe.from_date,
+            stat_day_timeframe.to_date,
+        )
+        for stat_day_timeframe in Timeframe.objects.filter(user=user, type="STAT Days")
+    )
+    if in_stat_days:
+        return False
+    return True
 
 
 def turn_messages_on(user, timeframe):
@@ -211,9 +245,7 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
             # if user_messages_on:
             #     # Chat already ON
             #     return
-            if timeframe_from_weekday_and_time_not_in_holidays_or_stat_days(
-                timeframe, user
-            ):
+            if timeframe_from_datetime_not_in_holidays_and_stat_days(timeframe, user):
                 turn_messages_on(user, timeframe)
                 return
             return
@@ -222,9 +254,7 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
             if (
                 # user_messages_on
                 # and
-                timeframe_to_weekday_and_time_not_in_holidays_or_stat_days(
-                    timeframe, user
-                )
+                timeframe_from_datetime_not_in_holidays_and_stat_days(timeframe, user)
             ):
                 # Chat is ON
                 turn_messages_off(user, timeframe)

@@ -5,7 +5,7 @@ from django.db import models
 class PomeloCredential(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField(blank=True, null=True)
-    password = models.CharField(max_length=100, blank=True, null=True)
+    password = models.TextField(blank=True, null=True)
     chat_on = models.BooleanField(
         null=True, blank=True, default=False
     )  # Tells if currently the chat is on or off
