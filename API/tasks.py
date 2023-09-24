@@ -131,7 +131,7 @@ def end_time_not_fho(timeframe, user):
     return not exists
 
 
-def datetime_not_between_two_datetimes(target_datetime, start_datetime, end_datetime):
+def datetime_between_two_datetimes(target_datetime, start_datetime, end_datetime):
     """
     Check if target_datetime is between start_datetime and end_datetime.
 
@@ -148,7 +148,7 @@ def datetime_not_between_two_datetimes(target_datetime, start_datetime, end_date
 
 def timeframe_from_datetime_not_in_holidays(timeframe: Timeframe, user):
     return not any(
-        datetime_not_between_two_datetimes(
+        datetime_between_two_datetimes(
             timeframe.from_date,
             holiday_timeframe.from_date,
             holiday_timeframe.to_date,
@@ -159,7 +159,7 @@ def timeframe_from_datetime_not_in_holidays(timeframe: Timeframe, user):
 
 def timeframe_from_datetime_not_in_holidays_and_stat_days(timeframe: Timeframe, user):
     in_holidays = any(
-        datetime_not_between_two_datetimes(
+        datetime_between_two_datetimes(
             timeframe.from_date,
             holiday_timeframe.from_date,
             holiday_timeframe.to_date,
@@ -169,7 +169,7 @@ def timeframe_from_datetime_not_in_holidays_and_stat_days(timeframe: Timeframe, 
     if in_holidays:
         return False
     in_stat_days = in_holidays = any(
-        datetime_not_between_two_datetimes(
+        datetime_between_two_datetimes(
             timeframe.from_date,
             stat_day_timeframe.from_date,
             stat_day_timeframe.to_date,
