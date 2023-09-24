@@ -250,15 +250,9 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
                 return
             return
         else:
-            # if the timeframe is for turning messages OFF
-            if (
-                # user_messages_on
-                # and
-                timeframe_from_datetime_not_in_holidays_and_stat_days(timeframe, user)
-            ):
-                # Chat is ON
-                turn_messages_off(user, timeframe)
-                return
+            turn_messages_off(user, timeframe)
+            timeframe.delete()
+            return
     elif timeframe.type.lower() == "stat days":
         # STAT days are not responsible of turning messages on
         if (
@@ -270,6 +264,7 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
             return
         elif messages_on:
             timeframe.delete()
+            return
     elif timeframe.type.lower() == "holidays":
         # Holidays are not responsible of turning messages on
         # if not messages_on and user_messages_on:
@@ -278,3 +273,4 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
             return
         elif messages_on:
             timeframe.delete()
+            return
