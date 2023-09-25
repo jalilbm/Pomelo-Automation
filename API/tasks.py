@@ -122,10 +122,11 @@ def end_time_not_fho(timeframe, user):
     timeframe_end_date_time = get_next_weekday_datetime(
         timeframe.end_time_day, timeframe.to_time
     )
+    print("timeframe_end_date_time", timeframe_end_date_time)
     exists = Timeframe.objects.filter(
         user=user,
         type="FHO Clinics",
-        end_datetime=timeframe_end_date_time,
+        from_date=timeframe_end_date_time,
     ).exists()
 
     return not exists
@@ -225,7 +226,6 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
             ):
                 turn_messages_on(user, timeframe)
                 return
-            return
         else:
             # if the timeframe is for turning messages OFF
             if (
@@ -236,6 +236,7 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
                     timeframe, user
                 )
             ):
+                print("hahahahha")
                 # Chat is ON and not in an FHO
                 turn_messages_off(user, timeframe)
                 return
