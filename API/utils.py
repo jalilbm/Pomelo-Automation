@@ -16,6 +16,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from cryptography.fernet import Fernet
 from base64 import urlsafe_b64encode
+from django.db.models import Q
 
 
 CHROMEDRIVER_PATH = config("CHROMEDRIVER_PATH")
@@ -332,8 +333,8 @@ def schedule_tasks():
         def create_or_update_task(day, hour, minute, task_type, timeframe_type):
             # Create a filter to find tasks with the same username, timeframe_type, and day
             existing_tasks = PeriodicTask.objects.filter(
-                name__contains=timeframe.user.username,
-                name__contains=f"({timeframe_type})",
+                Q(name__icontains=timeframe.user.username)
+                & Q(name__contains=timeframe_type),
                 crontab__day_of_week=str(day),
             )
             # If a task exists, update it
