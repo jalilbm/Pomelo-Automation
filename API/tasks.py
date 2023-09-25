@@ -236,7 +236,6 @@ def handle_messages_activation(timeframe_id, messages_on, user_id):
                     timeframe, user
                 )
             ):
-                print("hahahahha")
                 # Chat is ON and not in an FHO
                 turn_messages_off(user, timeframe)
                 return

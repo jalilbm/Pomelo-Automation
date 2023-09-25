@@ -95,6 +95,7 @@ class PomeloTasks:
         # Try 3 times to login
         for _ in range(3):
             with contextlib.suppress(TimeoutException):
+                add_log(self.user, f"Login attempt {_ + 1}")
                 # Get login page
                 self.driver.get("https://portal.healthmyself.net/login/#/")
                 # Wait for email input
@@ -329,15 +330,23 @@ def schedule_tasks():
     for timeframe in Timeframe.objects.all():
         # Helper function to create or update tasks
         def create_or_update_task(day, hour, minute, task_type, timeframe_type):
-            task_name = f"{task_type} for {timeframe.user.username} on {day} ({timeframe_type}) - ID {timeframe.id}"
-            try:
-                task = PeriodicTask.objects.get(name=task_name)
+            # Create a filter to find tasks with the same username, timeframe_type, and day
+            existing_tasks = PeriodicTask.objects.filter(
+                name__contains=timeframe.user.username,
+                name__contains=f"({timeframe_type})",
+                crontab__day_of_week=str(day),
+            )
+            # If a task exists, update it
+            if existing_tasks.exists():
+                task = existing_tasks.first()
                 task.crontab.day_of_week = str(day)
                 task.crontab.hour = hour
                 task.crontab.minute = minute
                 task.crontab.save()
                 task.save()
-            except PeriodicTask.DoesNotExist:
+            else:
+                # Otherwise, create a new task
+                task_name = f"{task_type} for {timeframe.user.username} on {day} ({timeframe_type}) - ID {timeframe.id}"
                 schedule, _ = CrontabSchedule.objects.get_or_create(
                     day_of_week=str(day),
                     hour=hour,
@@ -356,7 +365,7 @@ def schedule_tasks():
                             timeframe.user.id,
                         ]
                     ),
-                    queue="handle_messages_activation_queue",  # Add this line
+                    queue="handle_messages_activation_queue",
                 )
 
         if timeframe.time_type == "weekDays":
