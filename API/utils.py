@@ -333,7 +333,7 @@ def schedule_tasks():
         def create_or_update_task(day, hour, minute, task_type, timeframe_type):
             # Create a filter to find tasks with the same username, timeframe_type, and day
             existing_tasks = PeriodicTask.objects.filter(
-                Q(name__icontains=timeframe.user.username)
+                Q(name__icontains=f"for {timeframe.user.username} on")
                 & Q(name__contains=timeframe_type),
                 crontab__day_of_week=str(day),
             )
