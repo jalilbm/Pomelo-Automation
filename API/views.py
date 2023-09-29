@@ -45,6 +45,8 @@ class SettingsView(APIView):
 
         # Update the email and password fields
         pomelo_object.email = data.get("pomeloEmail")
+        if data.get("timeZone"):
+            pomelo_object.user_timezone = data.get("timeZone")
         pomelo_object.save()
 
         return Response(
@@ -57,6 +59,7 @@ class SettingsView(APIView):
             serializer = PomeloCredentialSerializer(pomelo_credentials)
         except Exception:
             serializer = None
+        print("-------", serializer.data)
         return Response(
             serializer.data if serializer else {"email": None, "password": None},
             status=status.HTTP_200_OK,
@@ -82,7 +85,7 @@ class UserLogViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         # Filter logs by the authenticated user
-        return UserLog.objects.filter(user=self.request.user)
+        return UserLog.objects.filter(user=self.request.user).order_by("timestamp")
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -149,11 +152,25 @@ class TimeframeView(APIView):
     def get(self, request):
         timeframes = Timeframe.objects.filter(user=request.user)
         serializer = TimeframeSerializer(timeframes, many=True)
+        try:
+            user_timezone = PomeloCredential.objects.get(
+                user=request.user
+            ).user_timezone
+        except PomeloCredential.DoesNotExist:
+            return Response(
+                {"message": "No Pomelo Credential found. Please Check settings"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        if not user_timezone:
+            return Response(
+                {"message": "No timezone found. Please Check settings"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         data = serializer.data
         for i, d in enumerate(data):
             if d.get("time_type") == "weekDays":
                 day_to_send = get_day_to_send(
-                    d.get("from_time"), d.get("timezone"), d.get("start_time_day")
+                    d.get("from_time"), user_timezone, d.get("start_time_day")
                 )
                 data[i]["day"] = day_to_send
         return Response(data, status=status.HTTP_200_OK)
@@ -172,8 +189,16 @@ class TimeframeView(APIView):
         existing_timeframes = Timeframe.objects.filter(user=request.user)
         existing_ids = {tf.id for tf in existing_timeframes}
         processed_ids = set()
-        user_timezone = timeframes_data.pop("timezone")
-
+        try:
+            user_timezone = PomeloCredential.objects.get(
+                user=request.user
+            ).user_timezone
+        except PomeloCredential.DoesNotExist:
+            return Response(
+                {"error": "No timezone found. Check settings"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        timeframes_data.pop("timezone")
         for key, timeframes in timeframes_data.items():
             for timeframe_data in timeframes:
                 # Add the type, time_type, and user fields based on the data structure
@@ -285,8 +310,9 @@ class TimeframeView(APIView):
         # Clean up any IntervalSchedule objects that are no longer associated with any PeriodicTask
         used_intervals = PeriodicTask.objects.values_list("interval", flat=True)
         IntervalSchedule.objects.exclude(id__in=used_intervals).delete()
-
+        print("hohoohoh 1")
         schedule_tasks()
+        print("hohoohoh 2")
         return Response(
             {"message": "Data processed successfully"}, status=status.HTTP_201_CREATED
         )

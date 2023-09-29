@@ -81,6 +81,7 @@ class PomeloTasks:
     def __init__(self, user):
         self.driver = get_driver()
         self.user = user
+        self.dashboard_username = None
 
     def restart_driver(self):
         self.driver.quit()
@@ -91,7 +92,11 @@ class PomeloTasks:
         element.click()
 
     def login(self):
-        credentials = PomeloCredential.objects.get(user=self.user)
+        try:
+            credentials = PomeloCredential.objects.get(user=self.user)
+        except PomeloCredential.DoesNotExist:
+            return False
+
         decrypted_password = decrypt_password(credentials.password)
         # Try 3 times to login
         for _ in range(3):
@@ -118,13 +123,18 @@ class PomeloTasks:
                     )
                 )
                 login_button.click()
-                return bool(
+                logged_in = bool(
                     WebDriverWait(self.driver, 30).until(
                         EC.presence_of_element_located(
                             (By.CSS_SELECTOR, ".board-inner")
                         )
                     )
                 )
+                if logged_in:
+                    self.dashboard_username = self.driver.current_url.split(".net/")[
+                        1
+                    ].split("/")[0]
+                return logged_in
         return False
 
     def update_work_groups(self):
@@ -150,7 +160,7 @@ class PomeloTasks:
     def get_pomelo_work_groups(self):
         add_log(self.user, "Getting work groups...")
         self.driver.get(
-            "https://portal.healthmyself.net/myfamilymd/portal/settings#/workgroups"
+            f"https://portal.healthmyself.net/{self.dashboard_username}/portal/settings#/workgroups"
         )
         WebDriverWait(self.driver, 30).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, '[class="list-group"]'))
@@ -175,7 +185,7 @@ class PomeloTasks:
     def get_pomelo_patient_groups(self):
         add_log(self.user, "Getting patient groups...")
         self.driver.get(
-            "https://portal.healthmyself.net/myfamilymd/portal/settings#/patient-groups"
+            f"https://portal.healthmyself.net/{self.dashboard_username}/portal/settings#/patient-groups"
         )
         WebDriverWait(self.driver, 30).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, '[class="list-group"]'))
@@ -197,7 +207,7 @@ class PomeloTasks:
 
     def navigate_to_work_group(self, work_group_title):
         self.driver.get(
-            "https://portal.healthmyself.net/myfamilymd/portal/settings#/workgroups"
+            f"https://portal.healthmyself.net/{self.dashboard_username}/portal/settings#/workgroups"
         )
         # work groups page
         element = WebDriverWait(self.driver, 30).until(
@@ -333,7 +343,8 @@ def schedule_tasks():
         def create_or_update_task(day, hour, minute, task_type, timeframe_type):
             # Create a filter to find tasks with the same username, timeframe_type, and day
             existing_tasks = PeriodicTask.objects.filter(
-                Q(name__icontains=f"for {timeframe.user.username} on")
+                Q(name__icontains=f"{task_type}")
+                & Q(name__icontains=f"for {timeframe.user.username} on")
                 & Q(name__contains=timeframe_type),
                 crontab__day_of_week=str(day),
             )

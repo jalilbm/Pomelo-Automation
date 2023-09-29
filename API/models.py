@@ -6,6 +6,7 @@ class PomeloCredential(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField(blank=True, null=True)
     password = models.TextField(blank=True, null=True)
+    user_timezone = models.CharField(max_length=50, null=False, blank=False)
     chat_on = models.BooleanField(
         null=True, blank=True, default=False
     )  # Tells if currently the chat is on or off
