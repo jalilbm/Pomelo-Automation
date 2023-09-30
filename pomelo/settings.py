@@ -152,6 +152,7 @@ ALLOWED_HOSTS = [
     "localhost:8000",
     "pomelo-9017cad2536d.herokuapp.com",
     "127.0.0.1",
+    "www.pomelotime.website",
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
