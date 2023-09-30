@@ -148,6 +148,7 @@ STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ALLOWED_HOSTS = [
+    "pomelotime.website",
     "localhost:8000",
     "pomelo-9017cad2536d.herokuapp.com",
     "127.0.0.1",
@@ -159,6 +160,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:3002",
     "https://pomelo-9017cad2536d.herokuapp.com",
+    "http://pomelotime.website",
+    "http://www.pomelotime.website",
+    "https://pomelotime.website",
+    "https://www.pomelotime.website",
 ]
 CELERY_BROKER_URL = REDIS_URL
 CELERY_TIMEZONE = "UTC"
