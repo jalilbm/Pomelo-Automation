@@ -9,10 +9,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY = config("SECRET_KEY")
-DATABASE_USER = config("DATABASE_USER")
-DATABASE_PASSWORD = config("DATABASE_PASSWORD")
-DATABASE_NAME = config("DATABASE_NAME")
-DATABASE_HOST = config("DATABASE_HOST")
 REDIS_URL = config("REDIS_URL")
 DEBUG = config("DEBUG")
 
@@ -121,7 +117,7 @@ WSGI_APPLICATION = "pomelo.wsgi.application"
 #     }
 # }
 
-DATABASES = {"default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))}
+DATABASES = {"default": dj_database_url.config(default=config("DATABASE_URL"))}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
